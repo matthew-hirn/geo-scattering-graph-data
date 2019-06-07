@@ -1,3 +1,55 @@
+def generate_graph(graph_name='../../collab.graph'):
+    if graph_name == '../../collab.graph':
+        maxval = 3
+        n_classes = 3
+    with open('../../collab.graph','rb') as f:
+        new_f = pk._Unpickler(f)
+        new_f.encoding = 'latin1'
+        raw = new_f.load()
+        
+        n_graphs = len(raw['graph'])
+        
+        graph_list = []
+        
+        A = []
+        rX = []
+        Y = []
+        
+        
+        for i in range(n_graphs):
+            if i%200 == 0:
+                print(i)
+            class_label = int(raw['labels'][i])
+            y = np.zeros((1, n_classes), dtype='int32')
+            y[0,class_label-1] = 1
+            
+            # create graph
+            g = raw['graph'][i]
+            n_nodes = len(g)
+            
+            x = np.zeros((n_nodes, maxval), dtype='float32')
+            
+            G = nx.Graph()
+            
+            for node, meta in g.items():
+                G.add_node(node)
+                for neighbor in meta['neighbors']:
+                    G.add_edge(node,neighbor)
+                    
+            for j in range(n_nodes):
+                x[j,0] = nx.eccentricity(G,j)
+                x[j,1] = nx.degree(G,j)
+                x[j,2] = nx.clustering(G,j)
+                
+            graph_list.append(G)
+            
+            A.append(nx.adjacency_matrix(G).todense())
+            Y.append(y)
+            rX.append(x)
+    return A,rX,Y
+
+
+
 def cross_validate(split_size,train_all_feature,train_all_Y,test_feature,test_Y,outter_loop,G_pool,C_pool):
     results = []
     train_idx,val_idx = Kfold(len(train_all_feature),split_size)
