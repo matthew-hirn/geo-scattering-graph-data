@@ -43,7 +43,7 @@ def generate_graph(graph_name='../../collab.graph'):
                 
             graph_list.append(G)
             
-            A.append(nx.adjacency_matrix(G).todense())
+            A.append(nx.adjacency_matrix(G,np.arange(n_nodes)).todense())
             Y.append(y)
             rX.append(x)
     return A,rX,Y
