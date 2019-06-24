@@ -88,7 +88,7 @@ def normalized_selected_second_order_feature(W,u,f):
 
 
 
-def generate_mol_feature(A,f,ro):
+def generate_graph_feature(A,f,ro):
     #with zero order, first order and second order features
     #shall consider only zero and first order features
     P = lazy_random_walk(A)
