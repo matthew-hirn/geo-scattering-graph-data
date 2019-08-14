@@ -1,3 +1,99 @@
+import numpy as np
+import networkx as nx
+import pickle as pk
+from numpy import linalg as LA
+from sklearn.decomposition import PCA
+import scipy.stats.mstats
+from sklearn.svm import SVC
+from collections import Counter
+from geometric_scattering import *
+
+
+
+print('start reading file')
+A, rX, Y = parse_graph_data(graph_name='../../../ENZYMES/enzymes.graph')
+print('finish reading')
+
+print('start feature generation')
+feature = []
+
+maxvalue = 3
+for i in range(len(A)):
+    if i%200 == 0:
+        print(i)
+    #F = generate_mol_feature(A[i],t,maxvalue,rX[i])
+    feature.append(generate_mol_feature(A[i],maxvalue,rX[i]))
+print('finish feature generation')
+
+feature = np.reshape(feature,(len(feature),feature[0].shape[0]))
+
+
+print('feature shape',feature.shape)
+
+
+#normalize feature
+norm_feature = np.sum(np.power(feature,2),axis=0)
+
+
+
+zero_list = []
+for i in range(len(norm_feature)):
+    if norm_feature[i] == 0:
+        zero_list.append(i)
+
+
+
+for i in reversed(zero_list):
+    feature = np.concatenate((feature[:,0:i],feature[:,i+1:]),1)
+
+
+print('feature shape',feature.shape)
+
+
+feature_z = scipy.stats.mstats.zscore(feature,0)
+
+
+
+print('feature z shape',feature_z.shape)
+
+#Let's first separate different classes.
+
+class1 = []
+class2 = []
+class3 = []
+class4 = []
+class5 = []
+class6 = []
+for i in range(len(Y)):
+    if Y[i] == 1:
+        class1.append(feature_z[i])
+    elif Y[i] == 2:
+        class2.append(feature_z[i])
+    elif Y[i] == 3:
+        class3.append(feature_z[i])
+    elif Y[i] == 4:
+        class4.append(feature_z[i])
+    elif Y[i] == 5:
+        class5.append(feature_z[i])
+    elif Y[i] == 6:
+        class6.append(feature_z[i])
+
+print('class1 size',len(class1))
+print('class2 size',len(class2))
+print('class3 size',len(class3))
+print('class4 size',len(class4))
+print('class5 size',len(class5))
+print('class6 size',len(class6))
+
+pca0 = PCA(n_components=0.9,svd_solver = 'full')
+pca0.fit(feature_z)
+
+pca_feature = pca0.fit_transform(feature_z)
+
+print('pca all variance covered',pca0.explained_variance_ratio_)
+print('pca all n components',pca0.n_components_)
+
+
 pca1 = PCA(n_components=0.9,svd_solver = 'full')
 pca1.fit(class1)
 components1 = pca1.components_
