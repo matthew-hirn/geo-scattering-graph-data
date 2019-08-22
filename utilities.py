@@ -26,8 +26,7 @@ def generate_graph(graph_name='../../collab.graph'):
             if i%200 == 0:
                 print(i)
             class_label = int(raw['labels'][i])
-            y = np.zeros((1, n_classes), dtype='int32')
-            y[0,class_label-1] = 1
+            Y.append(class_label)
             
             # create graph
             g = raw['graph'][i]
@@ -50,7 +49,6 @@ def generate_graph(graph_name='../../collab.graph'):
             graph_list.append(G)
             
             A.append(nx.adjacency_matrix(G,np.arange(n_nodes)).todense())
-            Y.append(y)
             rX.append(x)
     return A,rX,Y
 
