@@ -26,7 +26,7 @@ feature = np.reshape(feature,(len(feature),feature[0].shape[0]))
 print('feature shape',feature.shape)
 
 
-#normalize feature
+#remove 0 features
 norm_feature = np.sum(np.power(feature,2),axis=0)
 
 
