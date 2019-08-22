@@ -1,7 +1,7 @@
 import numpy as np
 import networkx as nx
 from numpy import linalg as LA
-
+import scipy.stats.mstats
 
 def lazy_random_walk(A):
     #if d == 0, P = 0
