@@ -53,6 +53,59 @@ def generate_graph(graph_name='../../collab.graph'):
     return A,rX,Y
 
 
+def parse_graph_data(graph_name='../../../ENZYMES/enzymes.graph'):
+    if graph_name == 'nci1.graph':
+        maxval = 37
+        n_classes = 2
+    elif graph_name == 'nci109.graph':
+        maxval = 38
+        n_classes = 2
+    elif graph_name == 'mutag.graph':
+        maxval = 7
+        n_classes = 2
+    elif graph_name == 'ptc.graph':
+        maxval = 22
+        n_classes = 2
+    elif graph_name == '../../../ENZYMES/enzymes.graph':
+        maxval = 3
+        n_classes = 6
+    
+    with open(graph_name,'rb') as f:
+        new_f = pk._Unpickler(f)
+        new_f.encoding = 'latin1'
+        raw = new_f.load()
+        
+        n_graphs = len(raw['graph'])
+        
+        A = []
+        rX = []
+        Y = []
+        
+        for i in range(n_graphs):
+            # Set label
+            class_label = raw['labels'][i]
+            
+            Y.append(class_label)
+            
+            # Parse graph
+            G = raw['graph'][i]
+            
+            n_nodes = len(G)
+            
+            a = np.zeros((n_nodes, n_nodes), dtype='float32')
+            x = np.zeros((n_nodes, maxval), dtype='float32')
+            
+            for node, meta in G.items():
+                label = meta['label'][0] - 1
+                x[node, label] = 1
+                for neighbor in meta['neighbors']:
+                    a[node, neighbor] = 1
+            
+            A.append(a)
+            rX.append(x)
+
+    return A, rX, Y
+
 
 def cross_validate(split_size,train_all_feature,train_all_Y,test_feature,test_Y,outter_loop,G_pool,C_pool):
     results = []
