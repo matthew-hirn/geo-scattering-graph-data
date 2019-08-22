@@ -4,11 +4,11 @@ import numpy as np
 from sklearn.svm import SVC
 from collections import Counter
 
-def generate_graph(graph_name='../../collab.graph'):
-    if graph_name == '../../collab.graph':
+def generate_graph(graph_name='dataset/imdb_comedy_romance_scifi.graph'):
+    if graph_name == 'dataset/imdb_comedy_romance_scifi.graph':
         maxval = 3
         n_classes = 3
-    with open('../../collab.graph','rb') as f:
+    with open('dataset/imdb_comedy_romance_scifi.graph','rb') as f:
         new_f = pk._Unpickler(f)
         new_f.encoding = 'latin1'
         raw = new_f.load()
@@ -53,7 +53,7 @@ def generate_graph(graph_name='../../collab.graph'):
     return A,rX,Y
 
 
-def parse_graph_data(graph_name='../../../ENZYMES/enzymes.graph'):
+def parse_graph_data(graph_name='dataset/enzymes.graph'):
     if graph_name == 'nci1.graph':
         maxval = 37
         n_classes = 2
@@ -66,7 +66,7 @@ def parse_graph_data(graph_name='../../../ENZYMES/enzymes.graph'):
     elif graph_name == 'ptc.graph':
         maxval = 22
         n_classes = 2
-    elif graph_name == '../../../ENZYMES/enzymes.graph':
+    elif graph_name == 'dataset/enzymes.graph':
         maxval = 3
         n_classes = 6
     
