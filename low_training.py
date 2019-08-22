@@ -1,4 +1,4 @@
-#Now we perform graph classification with 70% for training, 10% for validation and 10% for test.
+#Now we perform graph classification with 70% for training, 10% for validation and 20% for test.
 
 from geometric_scattering import *
 from utilities import *
