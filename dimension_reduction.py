@@ -9,7 +9,7 @@ import scipy
 
 
 print('start reading file')
-A, rX, Y = parse_graph_data(graph_name='../../../ENZYMES/enzymes.graph')
+A, rX, Y = parse_graph_data(graph_name='dataset/enzymes.graph')
 print('finish reading')
 
 print('start feature generation')
@@ -29,14 +29,14 @@ feature = np.reshape(feature,(len(feature),feature[0].shape[0]))
 print('feature shape',feature.shape)
 
 
-#normalize feature
+#remove 0 features
 norm_feature = np.sum(np.power(feature,2),axis=0)
 
 
 
 zero_list = []
 for i in range(len(norm_feature)):
-    if norm_feature[i] == 0:
+    if norm_feature[i] == 0.:
         zero_list.append(i)
 
 
