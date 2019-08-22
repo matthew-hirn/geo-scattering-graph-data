@@ -1,8 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
 import scipy.stats.mstats
-from sklearn.svm import SVC
-from collections import Counter
 from geometric_scattering import *
 from utilities import *
 import scipy
