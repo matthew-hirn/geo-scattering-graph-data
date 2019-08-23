@@ -17,7 +17,7 @@ for i in range(len(A)):
     if i%200 == 0:
         print(i)
     #F = generate_mol_feature(A[i],t,maxvalue,rX[i])
-    feature.append(generate_mol_feature(A[i],maxvalue,rX[i]))
+    feature.append(generate_gaph_feature(A[i],rX[i]))
 print('finish feature generation')
 
 feature = np.reshape(feature,(len(feature),feature[0].shape[0]))
