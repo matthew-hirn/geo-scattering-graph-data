@@ -33,7 +33,7 @@ norm_feature = np.sum(np.power(feature,2),axis=0)
 
 zero_list = []
 for i in range(len(norm_feature)):
-    if norm_feature[i] == 0:
+    if norm_feature[i] == 0.:
         zero_list.append(i)
 
 
