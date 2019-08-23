@@ -422,7 +422,7 @@ for i in range(len(class6)):
     pool = sorted([temp1,temp2,temp3,temp4,temp5,temp6])
     if pool[0] == temp6:
         count6 = count6+1
-    if pool[1] == temp5:
+    if pool[1] == temp6:
         count6_ = count6_+1
     
     loss61 = temp1+loss61
