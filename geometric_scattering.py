@@ -30,7 +30,7 @@ def graph_wavelet(P):
 
 
 
-def normalized_zero_order_feature(ro,f):
+def normalized_zero_order_feature(ro):
     F0 = []
     mu = np.mean(ro,0)
     F0.append(mu)
@@ -45,7 +45,7 @@ def normalized_zero_order_feature(ro,f):
 
 
 
-def normalized_first_order_feature(u,f):
+def normalized_first_order_feature(u):
     F1  = []
     mu = np.mean(u,1)
     F1.append(mu)
@@ -64,7 +64,7 @@ def normalized_first_order_feature(u,f):
 
 
 
-def normalized_selected_second_order_feature(W,u,f):
+def normalized_selected_second_order_feature(W,u):
     u1 = np.einsum('ij,ajt ->ait',W[1],u[0:1])
     for i in range(2,len(W)):
         u1 = np.concatenate((u1,np.einsum('ij,ajt ->ait',W[i],u[0:i])),0)
@@ -88,7 +88,7 @@ def normalized_selected_second_order_feature(W,u,f):
 
 
 
-def generate_graph_feature(A,f,ro):
+def generate_graph_feature(A,ro):
     #with zero order, first order and second order features
     #shall consider only zero and first order features
     P = lazy_random_walk(A)
@@ -99,6 +99,65 @@ def generate_graph_feature(A,f,ro):
     F1 = normalized_first_order_feature(u,f)
     #F2 = second_order_feature(W,u,P[0],t,F)
     F2 = normalized_selected_second_order_feature(W,u,f)
+    #F3 = selected_third_order_feature(W,u,P[0],t,F)
+    F = np.concatenate((F0,F1),axis=0)
+    F = np.concatenate((F,F2),axis=0)
+    #F = np.concatenate((F1,F2),axis=0)
+    #F = np.concatenate((F,F3),axis=0)
+    return F
+
+
+def zero_order_feature(ro):
+    F0 = []
+    for i in [1,2,3,4]:
+        F0.append(np.sum(np.power(np.abs(ro),i),0))
+    F0 = np.array(F0).reshape(-1,1)
+    return F0
+
+
+
+def first_order_feature(u):
+    F1  = []
+    for i in [1,2,3,4]:
+        F1.append(np.sum(np.power(u,i),1))
+    F1 = np.array(F1).reshape(-1,1)
+    #F = []
+    #F.append(np.sum(np.matmul(P,u[0]),1))
+    #for i in range(1,t):
+    #F = np.concatenate((F,np.sum(np.matmul(P,u[i]))),1)
+    return F1
+
+
+
+def selected_second_order_feature(W,u):
+    u1 = np.einsum('ij,ajt ->ait',W[1],u[0:1])
+    for i in range(2,len(W)):
+        u1 = np.concatenate((u1,np.einsum('ij,ajt ->ait',W[i],u[0:i])),0)
+    u1 = np.abs(u1)
+    F2 = []
+    for i in [1,2,3,4]:
+        F2.append(np.sum(np.power(u1,i),1))
+    F2 = np.array(F2).reshape(-1,1)
+    #F2.append(np.sum(np.einsum('ij,ajt ->ait',W[i],u[0:i]),1).reshape(len(u[0:i])*F,1))
+    #F2 = np.sum(np.einsum('ijk,akt ->iajt',P,F1),2).reshape(len(P)*len(F1)*F,1)
+    #F2 = np.array(F2).reshape()
+    return F2
+
+
+
+
+
+def generate_mol_feature(A,ro):
+    #with zero order, first order and second order features
+    #shall consider only zero and first order features
+    P = lazy_random_walk(A)
+    W = graph_wavelet(P)
+    u = np.abs(np.matmul(W,ro))
+    
+    F0 = zero_order_feature(ro)
+    F1 = first_order_feature(u)
+    #F2 = second_order_feature(W,u,P[0],t,F)
+    F2 = selected_second_order_feature(W,u)
     #F3 = selected_third_order_feature(W,u,P[0],t,F)
     F = np.concatenate((F0,F1),axis=0)
     F = np.concatenate((F,F2),axis=0)
