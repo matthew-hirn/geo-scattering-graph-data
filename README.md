@@ -11,7 +11,7 @@ Geometric scattering coefficients could be used for various downstream tasks, an
 
 ## Graph Classification of Social Network Datasets
 
-There are six social network datasets commonly used for graph classification: COLLAB, IMDB-B, IMDB-M, REDDIT-B, REDDIT-M and REDDIT-12K. In addition, we also compare our results with 10 kernek and deep learning methods.
+There are six social network datasets commonly used for graph classification: COLLAB, IMDB-B, IMDB-M, REDDIT-B, REDDIT-M and REDDIT-12K. In addition, we also compare our results with 10 kernel and deep learning methods.
 
 ## Graph Classification Under Low Training Data Availability
 
